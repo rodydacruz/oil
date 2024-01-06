@@ -1,4 +1,6 @@
+"use client"
 import Image from 'next/image'
+import { useState } from 'react';
 
 async function fetchProductData() {
   try {
@@ -12,11 +14,23 @@ async function fetchProductData() {
   }
 }
 
-export default async function Home() {
-  const product = await fetchProductData();
+export default function Home() {
+  const product = {
+    image: '',
+    name: 'Oil',
+    description: 'Pa Kusia',
+    price: 200,
+  };
+  const [showOrderForm, setShowOrderForm] = useState(false);
+
+  const handleBuyNowClick = () => {
+    document.querySelector('main')?.classList.add('-translate-x-full');
+    setShowOrderForm(true);
+  };
+
 
   return (
-    <div className="container mx-auto px-4 py-8 flex flex-col items-center bg-white rounded-lg shadow-md">
+    <main className="container mt-8 mx-auto px-4 py-8 flex flex-col items-center bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out">
   <Image
     src={"/oil.png" || product.image}
     alt={product.name}
@@ -33,9 +47,47 @@ export default async function Home() {
   </div>
   <button
     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full mt-8 w-48"
+    onClick={handleBuyNowClick}
   >
     Buy Now
   </button>
-</div>
+
+        <div className="order-form container absolute inset-y-0 mx-auto px-4 py-8 flex  flex-col items-center transform translate-x-full transition-all duration-300 ease-in-out">
+          {/* Simple order form content */}
+         
+          <div className="bg-white rounded-lg shadow-md p-8 text-black min-w-[60%]">
+          <button onClick={() => {
+            setShowOrderForm(false);
+            document.querySelector('main')?.classList.remove('-translate-x-full');
+          }}>
+            {"<--"}
+          </button>
+            <h2 className="text-2xl font-bold mb-6 text-center">Place Your Order</h2>
+            <form>
+              {/* Form fields for buyer information */}
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
+                  Name:
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              {/* Add more fields as needed */}
+              <button
+              
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full mt-8 w-48"
+              >
+                Submit Order
+              </button>
+            </form>
+          </div>
+        </div>
+</main>
   )
 }
+
+
